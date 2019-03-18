@@ -1,0 +1,23 @@
+import React , { Component } from "react";
+import BookControl from "./BookControl";
+
+const Book = (props) => {
+  const bookImg = "url(" + props.bookImg+ ")";
+  console.log(bookImg)
+    return(
+        <li>
+              <div className="book">
+                <div className="book-top">
+                  <div className="book-cover" style={{ width: 128, height: 193, backgroundImage:bookImg }}></div>
+                  <div className="book-shelf-changer">
+                    <BookControl/>
+                  </div>
+                </div>
+                <div className="book-title">{props.bookTitle}</div>
+                <div className="book-authors">{props.bookAuthors}</div>
+              </div>
+        </li>
+    )
+}
+
+export default Book;
