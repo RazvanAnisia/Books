@@ -2,10 +2,9 @@ import React , { Component } from "react";
 import BookControl from "./BookControl";
 
 const Book = (props) => {
-  const bookImg = "url(" + props.bookImg+ ")";
-  console.log(bookImg)
+  const bookImg = "url(" + props.bookImg + ")";
     return(
-        <li>
+        <li >
               <div className="book">
                 <div className="book-top">
                   <div className="book-cover" style={{ width: 128, height: 193, backgroundImage:bookImg }}></div>
