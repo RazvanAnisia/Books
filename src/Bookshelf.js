@@ -7,6 +7,8 @@ const Bookshelf = (props) => {
     <Book bookImg = { book.imageLinks.thumbnail }
           bookTitle = { book.title}
           key = { book.id }
+          updateShelf = {props.updateShelf}
+          bookObj = { book }
             />
   )
 
