@@ -52,9 +52,18 @@ class BooksApp extends React.Component {
       <BrowserRouter>
         <SearchBar/>
         <ListBookShelves >
-         <Bookshelf  updateShelf = {() => this.updateShelf} shelfName={ "Currently Reading" } books = { this.state.currentlyReading }/>
-         <Bookshelf  updateShelf = {this.updateShelf} shelfName={ "Want to Read" } books = { this.state.wantToRead }/>
-         <Bookshelf  updateShelf = {this.updateShelf} shelfName={ "Read" } books = { this.state.read }/>
+         <Bookshelf
+          updateShelf = {() => this.updateShelf}
+          shelfName={ "Currently Reading" }
+          books = { this.state.currentlyReading }/>
+         <Bookshelf
+          updateShelf = {this.updateShelf}
+          shelfName={ "Want to Read" }
+          books = { this.state.wantToRead }/>
+         <Bookshelf
+          updateShelf = {this.updateShelf}
+          shelfName={ "Read" }
+          books = { this.state.read }/>
             <div className="open-search">
               <button onClick={() => this.setState({ showSearchPage: true })}>Add a book</button>
             </div>

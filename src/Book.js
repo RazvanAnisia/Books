@@ -10,8 +10,9 @@ const Book = (props) => {
                   <div className="book-cover" style={{ width: 128, height: 193, backgroundImage:bookImg }}></div>
                   <div className="book-shelf-changer">
                     <BookControl
+                     shelfName = { props.shelfName }
                      bookObj = { props.bookObj }
-                     updateShelf={props.updateShelf}/>
+                     updateShelf={ props.updateShelf }/>
                   </div>
                 </div>
                 <div className="book-title">{props.bookTitle}</div>

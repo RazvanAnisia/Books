@@ -3,12 +3,14 @@ import Book from "./Book";
 
 
 const Bookshelf = (props) => {
+
   const currentBooks = props.books.map((book) =>
     <Book bookImg = { book.imageLinks.thumbnail }
           bookTitle = { book.title}
           key = { book.id }
           updateShelf = {props.updateShelf}
           bookObj = { book }
+          shelfName = { props.shelfName }
             />
   )
 
