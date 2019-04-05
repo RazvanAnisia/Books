@@ -3,8 +3,11 @@ import * as BooksAPI from './BooksAPI'
 import './App.css';
 import SearchBar from "./SearchBar";
 import {BrowserRouter} from "react-router-dom";
+import {Route} from "react-router-dom";
 import ListBookShelves from "./ListBookShelves";
 import Bookshelf from "./Bookshelf";
+import OpenSearch from "./OpenSearch.js";
+
 
 /**
      * TODO: Instead of using this state variable to keep track of which page
@@ -17,11 +20,10 @@ class BooksApp extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      showSearchPage: false,
       currentlyReading:[],
       wantToRead:[],
-      read:[]
-
+      read:[],
+      searchedBooks:[]
     }
     this.updateShelf = this.updateShelf.bind(this);
   }
@@ -35,39 +37,49 @@ class BooksApp extends React.Component {
         wantToRead : books.filter((book) => book.shelf === 'wantToRead'),
         read : books.filter((book) => book.shelf === 'read')
       })
+      // console.log(this.state)
     })
+    .catch((er) => console.log(er))
+    
   }
   componentDidMount(){
     this.fetchBooks();
   }
 
   updateShelf(book, shelf) {
-    console.log(shelf);
-    BooksAPI.update(book, shelf)
+     BooksAPI.update(book, shelf)
     .then(this.fetchBooks())
+    .catch((err) => console.log(err))
+    
   }
-
+  
   render() {
       return (
       <BrowserRouter>
-        <SearchBar/>
-        <ListBookShelves >
-         <Bookshelf
-          updateShelf = {() => this.updateShelf}
-          shelfName={ "Currently Reading" }
-          books = { this.state.currentlyReading }/>
-         <Bookshelf
-          updateShelf = {this.updateShelf}
-          shelfName={ "Want to Read" }
-          books = { this.state.wantToRead }/>
-         <Bookshelf
-          updateShelf = {this.updateShelf}
-          shelfName={ "Read" }
-          books = { this.state.read }/>
-            <div className="open-search">
-              <button onClick={() => this.setState({ showSearchPage: true })}>Add a book</button>
-            </div>
-        </ListBookShelves>
+       <Route exact path = "/"
+         render ={() => (<ListBookShelves >
+          <Bookshelf
+           updateShelf = {this.updateShelf}
+           shelfName={ "Currently Reading" }
+           books = { this.state.currentlyReading }/>
+          <Bookshelf
+           updateShelf = {this.updateShelf}
+           shelfName={ "Want to Read" }
+           books = { this.state.wantToRead }/>
+          <Bookshelf
+           updateShelf = {this.updateShelf}
+           shelfName={ "Read" }
+           books = { this.state.read }/>
+             <OpenSearch/>
+         </ListBookShelves>)}>
+      </Route> 
+      <Route path = "/search"
+        render ={() => <SearchBar 
+        currentBooks = { this.state }
+        updateShelf = { this.updateShelf }
+        />}>
+      </Route>
+        
       </BrowserRouter>
     )
   }
