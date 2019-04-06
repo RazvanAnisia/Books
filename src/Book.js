@@ -3,8 +3,13 @@ import BookControl from "./BookControl";
 
 const Book = (props) => {
   const bookImg = "url(" + props.bookImg + ")";
-  // const bookAuthors = props.bookAuthors.map((author) =><p>{author}</p>
-  // ) ;
+  const bookAuthors = props.bookAuthors;
+  let bookAuthorsSpaced;
+  //Check if the book has an author
+  if(bookAuthors){
+   bookAuthorsSpaced = bookAuthors.map((author) =><span key={author}>{author}<br/> </span> )
+  }
+
     return(
         <li >
               <div className="book">
@@ -18,7 +23,7 @@ const Book = (props) => {
                   </div>
                 </div>
                 <div className="book-title">{props.bookTitle}</div>
-                <div className="book-authors">{ props.bookAuthors} </div>
+                <div className="book-authors">{ bookAuthorsSpaced}</div>
               </div>
         </li>
     )

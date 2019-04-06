@@ -1,82 +1,96 @@
 import React , { Component } from "react";
-import { Link } from "react-router-dom"; 
+import { Link } from "react-router-dom";
 import * as BooksAPI from './BooksAPI';
 import Book from "./Book.js"
 
 class SearchBar extends Component {
    state = {
        books:[],
-       searched:false
+       results:false,
+       query:'',
+
+
    }
-   
+
     onSearch(e) {
-        const input = e.target.children[0].value;
-        BooksAPI.search(input)
-        .then((books) => {
-        // console.log("Search results", books)
-        let shelvedBooks = this.props.currentBooks;
+        const input = e.target.value;
+        this.setState({query:input});
+        if(this.state.query !== ''){
+            BooksAPI.search(this.state.query)
+            .then((books) => {
+                console.log("SEARCHED",books)
+            if(!books.error){
+                let shelvedBooks = this.props.currentBooks;
 
-        let shelvedCurrentlyReading = shelvedBooks.currentlyReading;
-        let shelvedWantToRead = shelvedBooks.wantToRead;
-        let shelvedRead = shelvedBooks.read;
-       
-        //Get books that are common for both arrays
-        let searchedTitles = books.map( searched => searched.title );
-       
-        let currentTitles = shelvedCurrentlyReading.map( book => book.title );
-        let readTitles = shelvedRead.map( book => book.title );
-        let wantToReadTitles = shelvedWantToRead.map( book => book.title );
-        
-        let commonCurrTitles = searchedTitles.filter(r => currentTitles.includes(r));        
-        let commonReadTitles = searchedTitles.filter(r => readTitles.includes(r));
-        let commonWantToReadTitles = searchedTitles.filter(r => wantToReadTitles.includes(r));
-        
-        //add the correct shelf property to each one
-        books.forEach((book) => {
-            if(commonCurrTitles.includes(book.title)){
-                book["shelf"] = "currentlyReading";
-            }else if(commonReadTitles.includes(book.title)){
-                book["shelf"] = "read";
-            }else if(commonWantToReadTitles.includes(book.title)) {
-                book["shelf"] = "wantToRead";
-            }else {
-                book["shelf"] = "none";
+            let shelvedCurrentlyReading = shelvedBooks.currentlyReading;
+            let shelvedWantToRead = shelvedBooks.wantToRead;
+            let shelvedRead = shelvedBooks.read;
+
+            //Get books that are common for both arrays
+            let searchedTitles = books.map( searched => searched.title );
+
+            let currentTitles = shelvedCurrentlyReading.map( book => book.title );
+            let readTitles = shelvedRead.map( book => book.title );
+            let wantToReadTitles = shelvedWantToRead.map( book => book.title );
+
+            let commonCurrTitles = searchedTitles.filter(r => currentTitles.includes(r));
+            let commonReadTitles = searchedTitles.filter(r => readTitles.includes(r));
+            let commonWantToReadTitles = searchedTitles.filter(r => wantToReadTitles.includes(r));
+
+            //add the correct shelf property to each one
+            books.forEach((book) => {
+                if(commonCurrTitles.includes(book.title)){
+                    book["shelf"] = "currentlyReading";
+                }else if(commonReadTitles.includes(book.title)){
+                    book["shelf"] = "read";
+                }else if(commonWantToReadTitles.includes(book.title)) {
+                    book["shelf"] = "wantToRead";
+                }else {
+                    book["shelf"] = "none";
+                }
+            })
+
+            this.setState({
+                books:books,
+                results:true,
+
+            })}else{
+                this.setState({results:false})
             }
-        })
 
-        // console.log("Common",commonCurrTitles, commonReadTitles, commonWantToReadTitles);
+            }
+            )
+            .catch((err)=>console.log(err))
+            e.preventDefault();
+        }else {
 
-         this.setState({
-            books:books,
-            searched:true,
-            
-        })}
-        )
-        .catch((err)=>console.log(err))
-        e.preventDefault(); 
+        }
+
     }
-    
+
     render(){
-     let searchedBooks = '';
-     if(this.state.searched && this.state.books.length > 0){
+     let searchedBooks = null;
+
+     if(this.state.results && this.state.books.length > 0 && this.state.query !==''){
+
         searchedBooks = this.state.books.map((book) =>
-        <Book bookImg = { book.imageLinks.thumbnail }
-              bookTitle = { book.title }
-              bookAuthors = { book.authors }
+        <Book bookImg = { book.imageLinks  ? book.imageLinks.thumbnail : null }
+              bookTitle = { book.title ? book.title : null }
+              bookAuthors = { book.authors ? book.authors : null }
               key = { book.id }
               bookObj = { book }
               updateShelf = {this.props.updateShelf}
         />
       )
-    }else if(!this.state.searched){
-      searchedBooks = "Sorry we have not found any books that match your query";
-    }   
+    }else if(!this.state.results){
+      searchedBooks = null;
+    }
       return(
         <div className="search-books">
             <div className="search-books-bar">
                 <Link to="/" className="close-search" >Close</Link>
                 <div className="search-books-input-wrapper">
-                   <form  onSubmit ={(e) =>this.onSearch(e)}>
+                   <form  onChange ={(e) =>this.onSearch(e)}>
                       <input type="text" placeholder="Search by title or author"/>
                    </form>
                 </div>
@@ -85,7 +99,7 @@ class SearchBar extends Component {
                 <ol className="books-grid">
                 {searchedBooks}
                 </ol>
-               
+
             </div>
         </div>
         )
@@ -93,5 +107,3 @@ class SearchBar extends Component {
 }
 
 export default SearchBar;
-
-

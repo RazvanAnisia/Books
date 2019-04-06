@@ -23,7 +23,6 @@ class BooksApp extends React.Component {
       currentlyReading:[],
       wantToRead:[],
       read:[],
-      searchedBooks:[]
     }
     this.updateShelf = this.updateShelf.bind(this);
   }
@@ -37,10 +36,10 @@ class BooksApp extends React.Component {
         wantToRead : books.filter((book) => book.shelf === 'wantToRead'),
         read : books.filter((book) => book.shelf === 'read')
       })
-      // console.log(this.state)
+
     })
     .catch((er) => console.log(er))
-    
+
   }
   componentDidMount(){
     this.fetchBooks();
@@ -50,9 +49,9 @@ class BooksApp extends React.Component {
      BooksAPI.update(book, shelf)
     .then(this.fetchBooks())
     .catch((err) => console.log(err))
-    
+
   }
-  
+
   render() {
       return (
       <BrowserRouter>
@@ -72,14 +71,14 @@ class BooksApp extends React.Component {
            books = { this.state.read }/>
              <OpenSearch/>
          </ListBookShelves>)}>
-      </Route> 
+      </Route>
       <Route path = "/search"
-        render ={() => <SearchBar 
+        render ={() => <SearchBar
         currentBooks = { this.state }
         updateShelf = { this.updateShelf }
         />}>
       </Route>
-        
+
       </BrowserRouter>
     )
   }
