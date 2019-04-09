@@ -27,8 +27,7 @@ class BooksApp extends React.Component {
     this.updateShelf = this.updateShelf.bind(this);
   }
 
-
-  fetchBooks() {
+ fetchBooks() {
     BooksAPI.getAll()
     .then((books)=>{
        this.setState({
@@ -47,29 +46,32 @@ class BooksApp extends React.Component {
 
   updateShelf(book, shelf) {
      BooksAPI.update(book, shelf)
-    .then(this.fetchBooks())
+    .then( this.fetchBooks())
     .catch((err) => console.log(err))
-
   }
 
   render() {
+    const shelves = {
+      currentlyReading: ['Currently Reading', 'currentlyReading'],
+      wantToRead: ['Want to Read', 'wantToRead'],
+      read: ['Read', 'read']
+    };
+
+    var Bookshelves = Object.keys(shelves).map((key) => {
+      return <Bookshelf
+      key = { shelves[key][0] }  
+      updateShelf = { this.updateShelf }
+      shelfName = { shelves[key][0] }
+      books = { this.state[shelves[key][1]] }/>
+    });
+    
+
       return (
       <BrowserRouter>
        <Route exact path = "/"
          render ={() => (<ListBookShelves >
-          <Bookshelf
-           updateShelf = {this.updateShelf}
-           shelfName={ "Currently Reading" }
-           books = { this.state.currentlyReading }/>
-          <Bookshelf
-           updateShelf = {this.updateShelf}
-           shelfName={ "Want to Read" }
-           books = { this.state.wantToRead }/>
-          <Bookshelf
-           updateShelf = {this.updateShelf}
-           shelfName={ "Read" }
-           books = { this.state.read }/>
-             <OpenSearch/>
+          {Bookshelves}
+          <OpenSearch/>
          </ListBookShelves>)}>
       </Route>
       <Route path = "/search"
