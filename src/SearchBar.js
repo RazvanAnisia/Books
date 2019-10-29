@@ -71,9 +71,7 @@ class SearchBar extends Component {
     render(){
      let searchedBooks = null;
 
-
      if(this.state.results && this.state.books.length > 0 && this.state.query !==''){
-
         searchedBooks = this.state.books.map((book) =>
         <Book bookImg = { book.imageLinks  ? book.imageLinks.thumbnail : null }
               bookTitle = { book.title ? book.title : null }
